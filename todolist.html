@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Enter new task">
+    <button id="addTaskbtn">Add Task</button>
+
+    <ul id="taskList"></ul>
+
+    <script>
+        const taskList = document.getElementById("taskList");
+        const taskInput = document.getElementById("taskInput");
+        const task = JSON.parse(localstorage.getItem("tasks")) || [];
+
+        const renderTask = () =>{
+            taskList.innerHTML=task.map((task,index)=>`
+            <li style="text-decoration: ${task.completed ? 'line-through' : 'none'}">
+                ${task.text}
+                <div>
+                    <button onclick = "toggleTask(${index})"> $task.completed? 'Undo' : 'Complete' </button>
+                    <button onclick = "toggleTask(${index})">Delete </button>
+                </div>
+            </li>`).join("");
+        };
+
+        const addTask = () => {
+            const text = task.input.trim();
+            if(!text){
+                return;
+            }
+            task.push({text, completed: false});
+            taskInput.value="";
+            updateTasks();
+        }
+
+        const toggleTask = (index) =>{
+            task[index].completed = !task[index].completed;
+            updateTasks();
+        } 
+
+        const deleteTask = (index) =>{
+            task.splice(index, 1);
+            updateTasks();
+        }
+
+        const updateTasks = () =>{
+            localStorage.setItem("task", JSON.stringify(task));
+            rendertask();
+        }
+
+        document.getElementById("addTaskbtn").onclick = addTask;
+        renderTask();
+    </script>
+</body>
+</html>
